@@ -5,7 +5,7 @@ PATCHLEVEL = 11
 SUBLEVEL =
 EXTRAVERSION = -rc2
 NAME =
-
+CROSS_COMPILE = arm-none-eabi-
 # *DOCUMENTATION*
 # To see a list of typical targets execute "make help"
 # More info can be located in ./README

@@ -61,6 +61,8 @@ struct stm32_fmc_regs {
  * FMC controller Enable, only availabe for H7
  */
 #define FMC_BCR1_FMCEN		BIT(31)
+#define FMC_BCR1_BMAP0		BIT(24)
+#define FMC_BCR1_BMAP1		BIT(25)
 
 /* Control register SDCR */
 #define FMC_SDCR_RPIPE_SHIFT	13	/* RPIPE bit shift */
@@ -164,7 +166,7 @@ int stm32_sdram_init(struct udevice *dev)
 	u32 ctb; /* SDCMR register: Command Target Bank */
 	u32 ref_count;
 	u8 i;
-
+	debug("%s:........\n",__func__);
 	/* disable the FMC controller */
 	if (params->family == STM32H7_FMC)
 		clrbits_le32(&regs->bcr1, FMC_BCR1_FMCEN);
@@ -175,6 +177,8 @@ int stm32_sdram_init(struct udevice *dev)
 		target_bank = params->bank_params[i].target_bank;
 		ref_count = params->bank_params[i].sdram_ref_count;
 
+	debug("%s target_bank=%d params->no_sdram_banks=%d........\n",__func__,target_bank,params->no_sdram_banks);
+
 		writel(control->sdclk << FMC_SDCR_SDCLK_SHIFT
 			| control->cas_latency << FMC_SDCR_CAS_SHIFT
 			| control->no_banks << FMC_SDCR_NB_SHIFT
@@ -184,7 +188,7 @@ int stm32_sdram_init(struct udevice *dev)
 			| control->rd_pipe_delay << FMC_SDCR_RPIPE_SHIFT
 			| control->rd_burst << FMC_SDCR_RBURST_SHIFT,
 			&regs->sdcr1);
-
+	
 		if (target_bank == SDRAM_BANK2)
 			writel(control->cas_latency << FMC_SDCR_CAS_SHIFT
 				| control->no_banks << FMC_SDCR_NB_SHIFT
@@ -217,8 +221,11 @@ int stm32_sdram_init(struct udevice *dev)
 		else
 			ctb = FMC_SDCMR_BANK_2;
 
+		debug("%s  ctb=%#X...sdcmr=%#X...\n",__func__,ctb,regs->sdcmr);
+
+
 		writel(ctb | FMC_SDCMR_MODE_START_CLOCK, &regs->sdcmr);
-		udelay(200);	/* 200 us delay, page 10, "Power-Up" */
+		udelay(500);	/* 200 us delay, page 10, "Power-Up" */
 		FMC_BUSY_WAIT(regs);
 
 		writel(ctb | FMC_SDCMR_MODE_PRECHARGE, &regs->sdcmr);
@@ -245,9 +252,13 @@ int stm32_sdram_init(struct udevice *dev)
 	}
 
 	/* enable the FMC controller */
-	if (params->family == STM32H7_FMC)
+	if (params->family == STM32H7_FMC){
+		setbits_le32(&regs->bcr1, FMC_BCR1_BMAP0);
+		clrbits_le32(&regs->bcr1, FMC_BCR1_BMAP1);
 		setbits_le32(&regs->bcr1, FMC_BCR1_FMCEN);
-
+	}
+	debug("%s bcr1=%#X...sdcr1=%#X...sdtr1=%#X...sdcmr=%#X...sdrtr=%#X\n",__func__,regs->bcr1,regs->sdcr1,regs->sdtr1,regs->sdcmr,regs->sdrtr);
+	debug("%s:regs->bcr1, FMC_BCR1_FMCEN..enable..return 0 .\n",__func__);
 	return 0;
 }
 
@@ -263,11 +274,11 @@ static int stm32_fmc_ofdata_to_platdata(struct udevice *dev)
 	char *bank_name;
 	u8 bank = 0;
 	int ret;
-
+	debug("%s:........\n",__func__);
 	ret = dev_read_phandle_with_args(dev, "st,syscfg", NULL, 0, 0,
 						 &args);
 	if (ret) {
-		dev_dbg(dev, "%s: can't find syscon device (%d)\n", __func__, ret);
+		debug("%s: can't find syscon device (%d)\n", __func__, ret);
 	} else {
 		syscfg_base = (u32 *)ofnode_get_addr(args.node);
 
@@ -276,7 +287,7 @@ static int stm32_fmc_ofdata_to_platdata(struct udevice *dev)
 			/* set memory mapping selection */
 			clrsetbits_le32(syscfg_base, MEM_MODE_MASK, mem_remap);
 		} else {
-			dev_dbg(dev, "%s: cannot find st,mem_remap property\n", __func__);
+			debug("%s: cannot find st,mem_remap property\n", __func__);
 		}
 		
 		swp_fmc = dev_read_u32_default(dev, "st,swp_fmc", NOT_FOUND);
@@ -284,10 +295,10 @@ static int stm32_fmc_ofdata_to_platdata(struct udevice *dev)
 			/* set fmc swapping selection */
 			clrsetbits_le32(syscfg_base, SWP_FMC_MASK, swp_fmc << SWP_FMC_OFFSET);
 		} else {
-			dev_dbg(dev, "%s: cannot find st,swp_fmc property\n", __func__);
+			debug("%s: cannot find st,swp_fmc property\n", __func__);
 		}
 
-		dev_dbg(dev, "syscfg %x = %x\n", (u32)syscfg_base, *syscfg_base);
+		debug("syscfg %x = %x\n", (u32)syscfg_base, *syscfg_base);
 	}
 
 	dev_for_each_subnode(bank_node, dev) {
@@ -343,13 +354,14 @@ static int stm32_fmc_ofdata_to_platdata(struct udevice *dev)
 	}
 
 	params->no_sdram_banks = bank;
-	debug("%s, no of banks = %d\n", __func__, params->no_sdram_banks);
+	debug("%s: no of banks = %d\n", __func__, params->no_sdram_banks);
 
 	return 0;
 }
 
 static int stm32_fmc_probe(struct udevice *dev)
 {
+	debug("%s:........\n",__func__);
 	struct stm32_sdram_params *params = dev_get_platdata(dev);
 	int ret;
 	fdt_addr_t addr;

@@ -330,8 +330,8 @@ struct pll_psc {
  * pll1_p = 250MHz / pll1_q = 250MHz pll1_r = 250Mhz
  */
 struct pll_psc sys_pll_psc = {
-	.divm = 4,
-	.divn = 80,
+	.divm = 25,
+	.divn = 448,
 	.divp = 2,
 	.divq = 2,
 	.divr = 2,
@@ -360,10 +360,10 @@ int configure_clocks(struct udevice *dev)
 	writel(0, &regs->cfgr);
 
 	/* Set all kernel domain clock registers to reset value*/
-	writel(0x0, &regs->d1ccipr);
+	writel(0x01, &regs->d1ccipr);
 	writel(0x0, &regs->d2ccip1r);
 	writel(0x0, &regs->d2ccip2r);
-
+	//writel(0x1000, &regs->ahb3enr);
 	/* Set voltage scaling at scale 1 (1,15 - 1,26 Volts) */
 	clrsetbits_le32(pwr_base + PWR_D3CR, PWR_D3CR_VOS_MASK,
 			VOS_SCALE_1 << PWR_D3CR_VOS_SHIFT);
