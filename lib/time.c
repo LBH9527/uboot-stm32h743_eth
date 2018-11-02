@@ -55,8 +55,8 @@ ulong timer_get_boot_us(void)
 #else
 extern unsigned long __weak timer_read_counter(void);
 #endif
-
-#ifdef CONFIG_TIMER
+/*
+#ifdef CONFIG_TIMER 
 ulong notrace get_tbclk(void)
 {
 	if (!gd->timer) {
@@ -98,21 +98,21 @@ uint64_t notrace get_ticks(void)
 	return count;
 }
 
-#else /* !CONFIG_TIMER */
-
+//#else /* !CONFIG_TIMER 
+*/
+/*
 uint64_t __weak notrace get_ticks(void)
 {
 	unsigned long now = timer_read_counter();
 
-	/* increment tbu if tbl has rolled over */
+	//* increment tbu if tbl has rolled over 
 	if (now < gd->timebase_l)
 		gd->timebase_h++;
 	gd->timebase_l = now;
 	return ((uint64_t)gd->timebase_h << 32) | gd->timebase_l;
 }
 
-#endif /* CONFIG_TIMER */
-
+//#endif /* CONFIG_TIMER */
 /* Returns time in milliseconds */
 static uint64_t notrace tick_to_time(uint64_t tick)
 {

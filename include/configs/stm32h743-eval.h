@@ -22,7 +22,7 @@
 
 #define CONFIG_ENV_SIZE			(8 << 10)
 
-#define CONFIG_SYS_HZ_CLOCK		1000000
+#define CONFIG_SYS_HZ_CLOCK		224000000
 
 #define CONFIG_CMDLINE_TAG
 #define CONFIG_SETUP_MEMORY_TAGS
@@ -37,14 +37,14 @@
 
 #include <config_distro_bootcmd.h>
 #define CONFIG_EXTRA_ENV_SETTINGS				\
-			"kernel_addr_r=0xD0008000\0"		\
+			"kernel_addr_r=0x60008000\0"		\
 			"fdtfile=stm32h743i-eval.dtb\0"	\
-			"fdt_addr_r=0xD0700000\0"		\
-			"scriptaddr=0xD0800000\0"		\
-			"pxefile_addr_r=0xD0800000\0" \
+			"fdt_addr_r=0x60700000\0"		\
+			"scriptaddr=0x60800000\0"		\
+			"pxefile_addr_r=0x60800000\0" \
 			"fdt_high=0xffffffffffffffff\0"		\
 			"initrd_high=0xffffffffffffffff\0"	\
-			"ramdisk_addr_r=0xD0900000\0"		\
+			"ramdisk_addr_r=0x60900000\0"		\
 			BOOTENV
 
 /*

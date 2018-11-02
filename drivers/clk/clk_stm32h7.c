@@ -210,11 +210,11 @@ static const struct clk_cfg clk_map[] = {
 	{RCC_AHB3ENR,   4, "dma2d"},
 	{RCC_AHB3ENR,   0, "mdma"},
 	{RCC_AHB1ENR,  28, "usb2ulpi"},
+	{RCC_AHB1ENR,  26, "usb1ulpi"},
 	{RCC_AHB1ENR,  17, "eth1rx"},
 	{RCC_AHB1ENR,  16, "eth1tx"},
 	{RCC_AHB1ENR,  15, "eth1mac"},
 	{RCC_AHB1ENR,  14, "art"},
-	{RCC_AHB1ENR,  26, "usb1ulpi"},
 	{RCC_AHB1ENR,   1, "dma2"},
 	{RCC_AHB1ENR,   0, "dma1"},
 	{RCC_AHB2ENR,  31, "d2sram3"},
@@ -352,6 +352,11 @@ int configure_clocks(struct udevice *dev)
 	uint32_t pllcfgr = 0;
 
 	/* Switch on HSI */
+
+	debug("%s configure_clocks ing........\n", __func__);
+	if (gd->flags & GD_FLG_SERIAL_READY)
+	return 0;
+
 	setbits_le32(&regs->cr, RCC_CR_HSION);
 	while (!(readl(&regs->cr) & RCC_CR_HSIRDY))
 		;
