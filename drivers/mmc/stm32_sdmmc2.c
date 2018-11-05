@@ -384,7 +384,7 @@ static int stm32_sdmmc2_send_cmd(struct udevice *dev, struct mmc_cmd *cmd,
 	struct stm32_sdmmc2_priv *priv = dev_get_priv(dev);
 	struct stm32_sdmmc2_ctx ctx;
 	u32 cmdat = data ? SDMMC_CMD_CMDTRANS : 0;
-	int ret, retry = 3;
+	int ret, retry = 5;
 
 retry_cmd:
 	ctx.data_length = 0;
@@ -397,7 +397,7 @@ retry_cmd:
 
 	stm32_sdmmc2_start_cmd(priv, cmd, cmdat);
 
-	debug("%s: send cmd %d data: 0x%x @ 0x%x\n",
+	printf("%s: send cmd %d data: 0x%x @ 0x%x\n",
 	      __func__, cmd->cmdidx,
 	      data ? ctx.data_length : 0, (unsigned int)data);
 
