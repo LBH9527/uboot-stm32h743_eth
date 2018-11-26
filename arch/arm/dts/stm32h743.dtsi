@@ -147,6 +147,7 @@
 			reg-names = "stmmaceth";
 			clock-names = "stmmaceth", "mac-clk-tx", "mac-clk-rx";
 			clocks = <&rcc ETH1MAC_CK>,<&rcc ETH1TX_CK>,<&rcc ETH1RX_CK>;
+			resets = <&rcc STM32H7_AHB1_RESET(ETH1MAC)>;
 			interrupts = <61>, <62>;
 			interrupt-names = "macirq", "eth_wake_irq";
 			st,syscon = <&syscfg 0x4>;
