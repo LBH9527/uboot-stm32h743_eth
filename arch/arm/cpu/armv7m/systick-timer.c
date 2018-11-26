@@ -36,7 +36,7 @@ struct cm3_systick {
 	uint32_t calibration;
 };
 
-#define TIMER_MAX_VAL		0x00D59F800
+#define TIMER_MAX_VAL		0xffffff
 #define SYSTICK_CTRL_EN		BIT(0)
 /* Clock source: 0 = Ref clock, 1 = CPU clock */
 #define SYSTICK_CTRL_CPU_CLK	BIT(2)
@@ -68,7 +68,7 @@ int timer_init(void)
 		writel(SYSTICK_CTRL_EN | SYSTICK_CTRL_CPU_CLK, &systick->ctrl);
 	else
 		/* Use external clock, no interrupts */
-		writel(0x5, &systick->ctrl);
+		writel(SYSTICK_CTRL_EN, &systick->ctrl);
 
 	/*
 	 * If the TENMS field is inexact or wrong, specify the clock rate using
