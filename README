@@ -1,29 +1,29 @@
-ÕâÊÇ±¾ÈËÒÆÖ²µÄUBOOT
-for      STM32H743ii    ÕıµãÔ­×Óstm32H7¿ª·¢°å
+è¿™æ˜¯æœ¬äººç§»æ¤çš„UBOOT
+for      STM32H743ii    æ­£ç‚¹åŸå­stm32H7å¼€å‘æ¿
 
-from  	¹Ù·½UBOOT 201811-rc2  ĞŞ¸Ä
+from  	å®˜æ–¹UBOOT 201811-rc2  ä¿®æ”¹
 
-CROSS_COMPILE = arm-none-eabi-    MAKEFILE ÇëÈ·±£Linux ÏµÍ³ÖĞ°²×°ÁË arm-none-eabi- ±àÒëÆ÷  mkimage ¹¤¾ß
+CROSS_COMPILE = arm-none-eabi-    MAKEFILE è¯·ç¡®ä¿Linux ç³»ç»Ÿä¸­å®‰è£…äº† arm-none-eabi- ç¼–è¯‘å™¨  mkimage å·¥å…·
 
 mkimage     
 
-µÚÒ»²½ £º±àÒë  uboot.bin   
-    1   ´Ó±¾Ò³ÃæÏÂÔØ uboot  ²¢½âÑ¹¡£
-    2   Ö´ĞĞ½Å±¾ ./build.sh  (²»ÄÜÕı³£Ö´ĞĞ ÇëÏÈÖ´ĞĞ chmod 777 build.sh) 
-    Õı³£Íê³Éºó»ØÉú³É uboot.bin  ÉÕÂ¼µ½ 0x8000000  flash µØÖ·
+ç¬¬ä¸€æ­¥ ï¼šç¼–è¯‘  uboot.bin   
+    1   ä»æœ¬é¡µé¢ä¸‹è½½ uboot  å¹¶è§£å‹ã€‚
+    2   æ‰§è¡Œè„šæœ¬ ./build.sh  (ä¸èƒ½æ­£å¸¸æ‰§è¡Œ è¯·å…ˆæ‰§è¡Œ chmod 777 build.sh) 
+    æ­£å¸¸å®Œæˆåå›ç”Ÿæˆ uboot.bin  çƒ§å½•åˆ° 0x8000000  flash åœ°å€
 
-µÚ¶ş²½£º ±àÒë  kernel 
+ç¬¬äºŒæ­¥ï¼š ç¼–è¯‘  kernel 
 
-    1   Çëµ½kernel¹Ù·½ÏÂÔØ linux4.15.2 °æ±¾£¨ÎÒÓÃµÄÕâ¸ö°æ±¾£©¸ß°æ±¾Ó¦¸ÃÒ²¿ÉÒÔ  £¨Ò²¿ÉÒÔµ½°¢ÀïÔÆÔ´ÏÂÔØ£©
-    2   ½âÑ¹kernelÎÄ¼ş 
-    3   ¸´ÖÆ uboot ÎÄ¼ş¼ĞÏÂµÄ stm32h7.config  rootfs.cpio uImage.sh µ½ kernelÎÄ¼ş¼ĞÏÂ
-    4   Ö´ĞĞ ./uImage.sh
-    5   ¸´ÖÆ Éú³ÉµÄuImage  stm32h743i-eval.dtb 2¸öÎÄ¼şµ½sd ¿¨£¨¸ñÊ½»¯Îª fat32 ¸ñÊ½£©
+    1   è¯·åˆ°kernelå®˜æ–¹ä¸‹è½½ linux4.15.2 ç‰ˆæœ¬ åˆ° é˜¿é‡Œäº‘æº ç­‰å›½å†…äº‘ä¸‹è½½é€Ÿåº¦å¿«
+    2   è§£å‹kernelæ–‡ä»¶ 
+    3   å¤åˆ¶ uboot æ–‡ä»¶å¤¹ä¸‹çš„ stm32h7.config  rootfs.cpio uImage.sh åˆ° kernelæ–‡ä»¶å¤¹ä¸‹
+    4   æ‰§è¡Œ ./uImage.sh
+    5   å¤åˆ¶ ç”Ÿæˆçš„uImage  stm32h743i-eval.dtb 2ä¸ªæ–‡ä»¶åˆ°sd å¡ï¼ˆæ ¼å¼åŒ–ä¸º fat32 æ ¼å¼ï¼‰
 
-ÔİÊ± µÚÈı²½£º
-    uboot  ÃüÁîÏÂ ¸´ÖÆÒÔÏÂ3¸öÃüÁî£ºÒÀ´ÎÖ´ĞĞ
+æš‚æ—¶ ç¬¬ä¸‰æ­¥ï¼š
+    uboot  å‘½ä»¤ä¸‹ å¤åˆ¶ä»¥ä¸‹3ä¸ªå‘½ä»¤ï¼šä¾æ¬¡æ‰§è¡Œ
     1   env set bootargs "root=/dev/ram console=ttyS0,115200" \n
     2   fatload mmc 0 60008000 uImage;fatload mmc 0 60800000 stm32h743i-eval.dtb \n
     3   bootm 60008000 - 60800000 \n
 
-ramdisk »¹Î´¼ÓÈë¡£¡£¡£
+ramdisk è¿˜æœªåŠ å…¥ã€‚ã€‚ã€‚
